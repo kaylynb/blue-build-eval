@@ -28,8 +28,10 @@ modules:
         - snapper-cleanup.timer
         - snapper-timeline.timer
       disabled:
+        - NetworkManager-wait-online.service
         - tailscaled.service
       masked:
+        - systemd-remount-fs.service
         - zfs-import.service
         - zfs.target
 
