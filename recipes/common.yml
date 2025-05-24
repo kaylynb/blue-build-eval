@@ -1,0 +1,37 @@
+---
+modules:
+  - type: dnf
+    repos:
+      copr:
+        - peterwu/iosevka
+    install:
+      packages:
+        - btrfs-assistant
+        - btrfsmaintenance
+        - earlyoom
+        - iosevka-fixed-fonts
+        - iosevka-fonts
+        - iosevka-term-fonts
+        - onedrive
+        - setroubleshoot
+        - snapper
+        - syncthing
+
+  - type: systemd
+    system:
+      enabled:
+        - btrfs-balance.timer
+        - btrfs-scrub.timer
+        - btrfs-trim.timer
+        - earlyoom.service
+        - snapper-boot.timer
+        - snapper-cleanup.timer
+        - snapper-timeline.timer
+      disabled:
+        - tailscaled.service
+      masked:
+        - zfs-import.service
+        - zfs.target
+
+  - type: signing # this sets up the proper policy & signing files for signed images to work fully
+
