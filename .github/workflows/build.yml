@@ -29,8 +29,76 @@ jobs:
           - stable.yml
           - stable-nvidia.yml
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        if: github.event_name == 'schedule' # Only checkout if we are running the check
+
+      - name: Check Upstream Image
+        if: github.event_name == 'schedule'
+        id: check_upstream
+        outputs:
+          needs_build: ${{ steps.check_upstream.outputs.needs_build }}
+        run: |
+          set -eo pipefail
+
+          sudo apt-get update && sudo apt-get install -y skopeo yq
+
+          UPSTREAM_IMAGE_NAME=$(yq e '.base-image' recipes/${{ matrix.recipe }})
+          UPSTREAM_IMAGE_TAG=$(yq e '.image-version' recipes/${{ matrix.recipe }})
+
+          echo "Recipe: recipes/${{ matrix.recipe }}"
+          echo "Inspecting upstream image: docker://${UPSTREAM_IMAGE_NAME}:${UPSTREAM_IMAGE_TAG}"
+
+          LATEST_UPSTREAM_DIGEST=""
+          if ! skopeo_inspect_output=$(skopeo inspect docker://${UPSTREAM_IMAGE_NAME}:${UPSTREAM_IMAGE_TAG} 2>&1); then
+            echo "Warning: Failed to fetch latest upstream digest for ${UPSTREAM_IMAGE_NAME}:${UPSTREAM_IMAGE_TAG}."
+            echo "Skopeo output: ${skopeo_inspect_output}"
+            echo "Assuming a build is needed."
+            echo "needs_build=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          LATEST_UPSTREAM_DIGEST=$(echo "${skopeo_inspect_output}" | jq -r '.Digest')
+
+
+          if [ -z "${LATEST_UPSTREAM_DIGEST}" ] || [ "${LATEST_UPSTREAM_DIGEST}" == "null" ]; then
+            echo "Warning: Latest upstream digest for ${UPSTREAM_IMAGE_NAME}:${UPSTREAM_IMAGE_TAG} is empty or null. Assuming a build is needed."
+            echo "Skopeo output: ${skopeo_inspect_output}"
+            echo "needs_build=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          echo "Latest Upstream Digest: ${LATEST_UPSTREAM_DIGEST}"
+
+          BUILT_IMAGE_RECIPE_NAME=$(yq e '.name' recipes/${{ matrix.recipe }})
+          CURRENT_BUILT_IMAGE_FQDN="ghcr.io/${{ github.repository_owner }}/${BUILT_IMAGE_RECIPE_NAME}:${UPSTREAM_IMAGE_TAG}"
+          echo "Inspecting currently built image: docker://${CURRENT_BUILT_IMAGE_FQDN}"
+
+          CURRENT_BASE_DIGEST=""
+          if ! skopeo_inspect_current_output=$(skopeo inspect docker://${CURRENT_BUILT_IMAGE_FQDN} 2>&1); then
+            echo "Info: Current image ${CURRENT_BUILT_IMAGE_FQDN} not found or inaccessible."
+            echo "Skopeo output: ${skopeo_inspect_current_output}"
+            echo "Assuming a build is needed as it might be the first run or image was deleted."
+            echo "needs_build=true" >> $GITHUB_OUTPUT
+            exit 0
+          else
+            CURRENT_BASE_DIGEST=$(echo "${skopeo_inspect_current_output}" | jq -r '.Labels["org.opencontainers.image.base.digest"] // ""')
+          fi
+
+          echo "Current Base Digest (from ${CURRENT_BUILT_IMAGE_FQDN} label): ${CURRENT_BASE_DIGEST}"
+
+          if [ -z "${CURRENT_BASE_DIGEST}" ]; then
+            echo "Info: Current base digest label not found on ${CURRENT_BUILT_IMAGE_FQDN}. This might be the first build after this check was added, or the label is missing. Assuming a build is needed."
+            echo "needs_build=true" >> $GITHUB_OUTPUT
+          elif [ "${LATEST_UPSTREAM_DIGEST}" != "${CURRENT_BASE_DIGEST}" ]; then
+            echo "Digests differ. Upstream: ${LATEST_UPSTREAM_DIGEST}, Current Base: ${CURRENT_BASE_DIGEST}. A build is needed."
+            echo "needs_build=true" >> $GITHUB_OUTPUT
+          else
+            echo "Digests are identical (${LATEST_UPSTREAM_DIGEST}). No build needed for this image based on upstream changes."
+            echo "needs_build=false" >> $GITHUB_OUTPUT
+          fi
+
       # the build is fully handled by the reusable github action
       - name: Build Custom Image
+        if: github.event_name != 'schedule' || (github.event_name == 'schedule' && steps.check_upstream.outputs.needs_build == 'true')
         uses: blue-build/github-action@v1.8
         with:
           recipe: ${{ matrix.recipe }}
