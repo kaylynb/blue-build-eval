@@ -4,11 +4,13 @@ modules:
     repos:
       copr:
         - peterwu/iosevka
+        - cboxdoerfer/fsearch 
     install:
       packages:
         - btrfs-assistant
         - btrfsmaintenance
         - earlyoom
+        - fsearch
         - iosevka-fixed-fonts
         - iosevka-fonts
         - iosevka-term-fonts
