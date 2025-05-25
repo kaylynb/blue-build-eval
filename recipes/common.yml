@@ -4,7 +4,7 @@ modules:
     repos:
       copr:
         - peterwu/iosevka
-        - cboxdoerfer/fsearch 
+        - cboxdoerfer/fsearch_nightly
     install:
       packages:
         - btrfs-assistant
