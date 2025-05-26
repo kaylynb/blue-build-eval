@@ -51,7 +51,7 @@ jobs:
 
       # the build is fully handled by the reusable github action
       - name: Build Custom Image
-        if: steps.should_build.outputs.build_needed == '1'
+        if: github.event_name != 'schedule' || steps.should_build.outputs.build_needed == '1'
         uses: blue-build/github-action@v1.8
         with:
           recipe: ${{ matrix.recipe }}
