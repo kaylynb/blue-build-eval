@@ -8,7 +8,6 @@ on:
     paths-ignore: # don't rebuild if only documentation has changed
       - "**.md"
 
-  pull_request:
   workflow_dispatch: # allow manually triggering builds
 concurrency:
   # only run one build at a time
@@ -29,8 +28,30 @@ jobs:
           - stable.yml
           - stable-nvidia.yml
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq
+          
+          # Install yq
+          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+          
+          # Install skopeo
+          sudo apt-get install -y skopeo
+
+      - name: Check if build is needed
+        id: should_build
+        run: |
+          build_needed=$(scripts/should-build.sh ${{ matrix.recipe }})
+          echo "build_needed=$build_needed" >> $GITHUB_OUTPUT
+
       # the build is fully handled by the reusable github action
       - name: Build Custom Image
+        if: steps.should_build.outputs.build_needed == '1'
         uses: blue-build/github-action@v1.8
         with:
           recipe: ${{ matrix.recipe }}
