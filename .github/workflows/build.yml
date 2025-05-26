@@ -26,12 +26,16 @@ jobs:
       matrix:
         recipe:
           - stable.yml
-          - stable-nvidia.yml
+          - stable-daily.yml
+          - nvidia-open-stable.yml
+          - nvidia-open-stable-daily.yml
     steps:
       - name: Checkout Repository
+        if: github.event_name == 'schedule'
         uses: actions/checkout@v4
 
       - name: Install Dependencies
+        if: github.event_name == 'schedule'
         run: |
           sudo apt-get update
           sudo apt-get install -y jq
@@ -44,6 +48,7 @@ jobs:
           sudo apt-get install -y skopeo
 
       - name: Check if build is needed
+        if: github.event_name == 'schedule'
         id: should_build
         run: |
           build_needed=$(scripts/should-build.sh ${{ matrix.recipe }})
