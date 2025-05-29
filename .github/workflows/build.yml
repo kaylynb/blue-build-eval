@@ -31,11 +31,11 @@ jobs:
           - nvidia-open-stable-daily.yml
     steps:
       - name: Checkout Repository
-        if: github.event_name == 'schedule'
+        # if: github.event_name == 'schedule'
         uses: actions/checkout@v4
 
       - name: Install Dependencies
-        if: github.event_name == 'schedule'
+        # if: github.event_name == 'schedule'
         run: |
           sudo apt-get update
           sudo apt-get install -y jq
@@ -48,15 +48,19 @@ jobs:
           sudo apt-get install -y skopeo
 
       - name: Check if build is needed
-        if: github.event_name == 'schedule'
+        # if: github.event_name == 'schedule'
         id: should_build
         run: |
-          build_needed=$(scripts/should-build.sh ${{ matrix.recipe }})
-          echo "build_needed=$build_needed" >> $GITHUB_OUTPUT
+          if scripts/should-build.sh ${{ matrix.recipe }}; then
+            echo "build_needed=0" >> $GITHUB_OUTPUT
+          else
+            echo "build_needed=1" >> $GITHUB_OUTPUT
+          fi
 
       # the build is fully handled by the reusable github action
       - name: Build Custom Image
-        if: github.event_name != 'schedule' || steps.should_build.outputs.build_needed == '1'
+        # if: github.event_name != 'schedule' || steps.should_build.outputs.build_needed == '1'
+        if: steps.should_build.outputs.build_needed == '1'
         uses: blue-build/github-action@v1.8
         with:
           recipe: ${{ matrix.recipe }}

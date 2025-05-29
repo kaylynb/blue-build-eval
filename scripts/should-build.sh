@@ -13,7 +13,10 @@ recipe_file="recipes/$1"
 
 # Get output image path (our built image)
 name=$(yq '.name' "$recipe_file")
-output_image_path="${BUILD_PREFIX}${name}"
+version=$(yq '.image-version' "$recipe_file")
+output_image_path="${BUILD_PREFIX}${name}:${version}"
+
+echo "output_image_path: $output_image_path"
 
 # Get current base digest and base name from our built image
 current_labels=$(skopeo inspect "docker://${output_image_path}")
@@ -23,9 +26,12 @@ base_name=$(echo "$current_labels" | jq -r '.Labels["org.opencontainers.image.ba
 # Get upstream digest from the actual upstream image
 upstream_digest=$(skopeo inspect "docker://${base_name}" | jq -r '.Digest')
 
+echo "Current base digest: $current_base_digest"
+echo "Upstream base digest: $upstream_digest"
+
 # Compare digests
 if [[ "$current_base_digest" == "$upstream_digest" ]]; then
-    echo "0"
+    exit 0
 else
-    echo "1"
+    exit 1
 fi
