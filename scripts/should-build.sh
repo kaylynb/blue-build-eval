@@ -31,7 +31,9 @@ echo "Upstream base digest: $upstream_digest"
 
 # Compare digests
 if [[ "$current_base_digest" == "$upstream_digest" ]]; then
+    echo "Base digest matches upstream. No rebuild needed."
     exit 0
 else
+    echo "Base digest does not match upstream. Rebuild needed."
     exit 1
 fi
