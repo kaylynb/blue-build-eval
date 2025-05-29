@@ -6,6 +6,7 @@ on:
   push:
     paths-ignore: # don't rebuild if only documentation has changed
       - "**.md"
+      - ".github/workflows/build.yml"
 
   workflow_dispatch: # allow manually triggering builds
 concurrency:
@@ -58,7 +59,7 @@ jobs:
 
       # the build is fully handled by the reusable github action
       - name: Build Custom Image
-        if: github.event_name != 'schedule' || steps.should_build.outputs.build_needed == '1'
+        if: github.event_name != 'schedule' || steps.should_build.outputs.build_needed != '0'
         uses: blue-build/github-action@v1.8
         with:
           recipe: ${{ matrix.recipe }}
