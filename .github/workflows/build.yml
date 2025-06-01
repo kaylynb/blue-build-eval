@@ -29,6 +29,8 @@ jobs:
           - stable-daily.yml
           - nvidia-open-stable.yml
           - nvidia-open-stable-daily.yml
+          - nvidia-stable.yml
+          - nvidia-stable-daily.yml
     steps:
       - name: Checkout Repository
         if: github.event_name == 'schedule'
