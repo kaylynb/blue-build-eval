@@ -29,6 +29,7 @@ modules:
         - snapper-boot.timer
         - snapper-cleanup.timer
         - snapper-timeline.timer
+        - podman-auto-update.timer
       disabled:
         - NetworkManager-wait-online.service
         - tailscaled.service
@@ -36,6 +37,10 @@ modules:
         - systemd-remount-fs.service
         - zfs-import.service
         - zfs.target
+    user:
+      enabled:
+        - podman-auto-update.timer
+        - podman.socket
 
   - type: signing # this sets up the proper policy & signing files for signed images to work fully
 
