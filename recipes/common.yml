@@ -18,6 +18,7 @@ modules:
         - setroubleshoot
         - snapper
         - syncthing
+        - uxplay
 
   - type: systemd
     system:
