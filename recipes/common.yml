@@ -19,6 +19,10 @@ modules:
         - snapper
         - syncthing
         - uxplay
+    
+  - type: script
+    scripts:
+      - metered.sh
 
   - type: systemd
     system:
