@@ -14,6 +14,7 @@ modules:
         - iosevka-fixed-fonts
         - iosevka-fonts
         - iosevka-term-fonts
+        - ledger
         - onedrive
         - setroubleshoot
         - snapper
