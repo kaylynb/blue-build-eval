@@ -14,7 +14,6 @@ modules:
         - iosevka-fixed-fonts
         - iosevka-fonts
         - iosevka-term-fonts
-        - ledger
         - onedrive
         - setroubleshoot
         - snapper
@@ -47,9 +46,6 @@ modules:
       enabled:
         - podman-auto-update.timer
         - podman.socket
-
-  - type: soar
-    additional-repos: true
 
   - type: signing # this sets up the proper policy & signing files for signed images to work fully
 
