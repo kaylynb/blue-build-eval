@@ -34,7 +34,7 @@ jobs:
     steps:
       - name: Checkout Repository
         if: github.event_name == 'schedule'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Dependencies
         if: github.event_name == 'schedule'
