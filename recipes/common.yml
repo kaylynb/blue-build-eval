@@ -5,21 +5,35 @@ modules:
       copr:
         - peterwu/iosevka
         - cboxdoerfer/fsearch_nightly
+        - quadratech188/cmark-gfm
     install:
       packages:
         - btrfs-assistant
         - btrfsmaintenance
         - earlyoom
         - fsearch
+        - glibc-static
         - iosevka-fixed-fonts
         - iosevka-fonts
         - iosevka-term-fonts
+        - layer-shell-qt-devel
+        - libqalculate-devel
+        - libstdc++-static
+        - minizip-devel
         - onedrive
+        - qt6-qtbase-devel
+        - qt6-qtbase-private-devel
+        - qt6-qtsvg-devel
+        - qt6-qtwayland-devel
+        - qtkeychain-qt6-devel
+        - rapidfuzz-cpp-devel
         - setroubleshoot
         - snapper
         - syncthing
         - uxplay
-    
+        - wayland-devel
+        - zlib-static
+
   - type: script
     scripts:
       - metered.sh
