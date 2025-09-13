@@ -10,6 +10,7 @@ modules:
       packages:
         - btrfs-assistant
         - btrfsmaintenance
+        - cmark-gfm
         - earlyoom
         - fsearch
         - glibc-static
