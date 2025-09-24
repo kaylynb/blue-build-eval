@@ -1,0 +1,13 @@
+---
+name: blue-build-eval-aurora
+# description will be included in the image's metadata
+description: This is my personal OS image.
+alt-tags:
+  - stable
+
+# the base image to build on top of (FROM) and the version tag to use
+base-image: ghcr.io/ublue-os/aurora-dx
+image-version: stable # latest is also supported if you want new updates ASAP
+
+modules:
+  - from-file: common.yml

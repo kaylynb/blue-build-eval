@@ -31,6 +31,8 @@ jobs:
           - nvidia-open-stable-daily.yml
           - nvidia-stable.yml
           - nvidia-stable-daily.yml
+          - aurora-stable.yml
+          - aurora-nvidia-open-stable.yml
     steps:
       - name: Checkout Repository
         if: github.event_name == 'schedule'
@@ -41,11 +43,11 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y jq
-          
+
           # Install yq
           sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
           sudo chmod +x /usr/local/bin/yq
-          
+
           # Install skopeo
           sudo apt-get install -y skopeo
 
