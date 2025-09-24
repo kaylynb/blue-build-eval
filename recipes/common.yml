@@ -9,7 +9,6 @@ modules:
       packages:
         - btrfs-assistant
         - btrfsmaintenance
-        - earlyoom
         - fsearch
         - iosevka-fixed-fonts
         - iosevka-fonts
@@ -30,7 +29,6 @@ modules:
         - btrfs-balance.timer
         - btrfs-scrub.timer
         - btrfs-trim.timer
-        - earlyoom.service
         - snapper-boot.timer
         - snapper-cleanup.timer
         - snapper-timeline.timer
