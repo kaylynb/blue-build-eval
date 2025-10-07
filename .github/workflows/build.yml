@@ -31,8 +31,6 @@ jobs:
           - nvidia-open-stable-daily.yml
           - nvidia-stable.yml
           - nvidia-stable-daily.yml
-          - aurora-stable.yml
-          - aurora-nvidia-open-stable.yml
     steps:
       - name: Checkout Repository
         if: github.event_name == 'schedule'
