@@ -10,6 +10,7 @@ modules:
         - btrfs-assistant
         - btrfsmaintenance
         - fsearch
+        - gnupg2-scdaemon
         - iosevka-fixed-fonts
         - iosevka-fonts
         - iosevka-term-fonts
