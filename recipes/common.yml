@@ -14,11 +14,11 @@ modules:
         - iosevka-fixed-fonts
         - iosevka-fonts
         - iosevka-term-fonts
+        - neovim
         - onedrive
         - setroubleshoot
         - snapper
         - syncthing
-        - uxplay
 
   - type: script
     scripts:
