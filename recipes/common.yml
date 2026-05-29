@@ -5,13 +5,11 @@ modules:
       copr:
         - cboxdoerfer/fsearch_nightly
         - peterwu/iosevka
-        - scottames/ghostty
     install:
       packages:
         - btrfs-assistant
         - btrfsmaintenance
         - fsearch
-        - ghostty
         - gnupg2-scdaemon
         - iosevka-fixed-fonts
         - iosevka-fonts
