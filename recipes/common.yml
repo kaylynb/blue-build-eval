@@ -5,10 +5,15 @@ modules:
       copr:
         - cboxdoerfer/fsearch_nightly
         - peterwu/iosevka
+      files:
+        - claude-desktop-unofficial.repo
+      keys:
+        - https://pkg.claude-desktop-debian.dev/KEY.gpg
     install:
       packages:
         - btrfs-assistant
         - btrfsmaintenance
+        - claude-desktop-unofficial
         - earlyoom
         - fsearch
         - gnupg2-scdaemon
