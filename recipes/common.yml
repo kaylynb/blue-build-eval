@@ -16,15 +16,18 @@ modules:
         - claude-desktop-unofficial
         - earlyoom
         - fsearch
+        - gdb
         - gnupg2-scdaemon
         - iosevka-fixed-fonts
         - iosevka-fonts
         - iosevka-term-fonts
+        - lldb
         - mkosi
         - neovim
         - onedrive
         - setroubleshoot
         - snapper
+        - strace
         - syncthing
 
   - type: script
