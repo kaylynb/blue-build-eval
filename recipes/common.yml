@@ -29,6 +29,7 @@ modules:
         - snapper
         - strace
         - syncthing
+        - vulkan-validation-layers
 
   - type: script
     scripts:
